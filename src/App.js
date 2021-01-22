@@ -3,7 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import AuthorizationList from './views/AuthorizationList'
-import AuthorizationForm from './views/AuthorizationForm'
+import AuthorizationForm from './views/AuthorizationForms'
 import { Button, Icon } from 'react-native-elements';
 
 const Stack = createStackNavigator();

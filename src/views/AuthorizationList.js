@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, FlatList } from 'react-native';
+import { Text, FlatList } from 'react-native';
 import authorizations from '../data/authorizations';
 import { Button, Icon } from 'react-native-elements'
 import styled from 'styled-components/native'
@@ -7,7 +7,7 @@ import styled from 'styled-components/native'
 export default props => {
 
     const StyledViewItem = styled.View`
-        background-color: #E8E7E7;
+        background-color: #F2F2F2;
         margin: 10px;
         padding: 8px 15px;
         border-radius: 4px;
@@ -24,24 +24,30 @@ export default props => {
         margin-left: 5px;
     `
 
+    const StyledButtonList = styled.View`
+        display: flex;
+        flex-direction: row;
+        align-self: flex-end;
+    `
+
     function getAuthorizationsItem({item: authorization}){
         return (
             <StyledViewItem>
                 <Text><StyledTextTitle>Cód. Autorização: </StyledTextTitle>{authorization.id}</Text>
                 <Text><StyledTextTitle>Hospital: </StyledTextTitle>{authorization.hospital}</Text>
                 <Text><StyledTextTitle>Beneficiario: </StyledTextTitle>{authorization.beneficiario}</Text>
-                <View>
+                <StyledButtonList>
                     <Button 
                         type="clear"
-                        icon={<Icon name="settings" size={25} />}
-                        onPress={() => navigation.navigate("AuthorizationForm")}
+                        icon={<Icon name="eye" size={22} type='font-awesome' />}
+                        onPress={() => {}}
                         />
                     <Button 
                         type="clear"
-                        icon={<Icon name="settings" size={25} />}
-                        onPress={() => navigation.navigate("AuthorizationForm")}
+                        icon={<Icon name="pencil" size={22} type='font-awesome' />}
+                        onPress={() => {}}
                         />
-                </View>
+                </StyledButtonList>
             </StyledViewItem>
 
         )
