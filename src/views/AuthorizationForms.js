@@ -2,12 +2,31 @@ import React, { useState } from 'react';
 import { KeyboardAvoidingView, ScrollView } from 'react-native';
 import styled from 'styled-components/native';
 
+import getRealm from '../services/realm'
+
 
 export default ({route, navigation}) => {
 
     const [codAutorizacao, setcodAutorizacao] = useState('');
     const [hospital, setHospital] = useState('');
     const [beneficiario, setBeneficiario] = useState('');
+
+    async function handleAddAutorization(){
+        try {
+            const data = {
+                id: parseInt(codAutorizacao),
+                hospital: hospital,
+                beneficiario: beneficiario
+            }
+            const realm = await getRealm();
+            realm.write(() => {
+                realm.create('authorization', data)
+            })
+            navigation.navigate("AuthorizationList")
+        } catch (err) {
+            console.warn(err);
+        }
+    }
 
     return (
         <KeyboardAvoidingView
@@ -26,6 +45,7 @@ export default ({route, navigation}) => {
                             value={codAutorizacao}
                             onChangeText={t => setcodAutorizacao(t)}
                             placeholder="Cód. Autorização"
+                            keyboardType="number-pad"
                         />
                         <Input  
                             value={hospital}
@@ -37,7 +57,7 @@ export default ({route, navigation}) => {
                             onChangeText={t => setBeneficiario(t)}
                             placeholder="Beneficiário"
                         />
-                        <Button>
+                        <Button onPress={handleAddAutorization}>
                             <TextButton>Cadastrar</TextButton>
                         </Button>
                     </Form>

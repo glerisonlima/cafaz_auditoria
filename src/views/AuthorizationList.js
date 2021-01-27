@@ -1,10 +1,62 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Text, FlatList } from 'react-native';
-import authorizations from '../data/authorizations';
-import { Button, Icon } from 'react-native-elements'
-import styled from 'styled-components/native'
+//import authorizations from '../data/authorizations';
+import { Button, Icon } from 'react-native-elements';
+import styled from 'styled-components/native';
 
-export default props => {
+import { Alert } from 'react-native';
+
+import getRealm from '../services/realm'
+
+export default ({navigation, route}) => {  
+    
+    const [authorizations, setAuthorizations] = useState([])
+
+    
+
+   
+
+    useEffect(() => {
+        async function loadAuthorizations(){
+            const realm = await getRealm();
+
+            const data = realm.objects('authorization').sorted('id', true);
+            setAuthorizations(data);
+        }
+        loadAuthorizations();
+    }, [authorizations])
+
+    function getAuthorizationsItem({item: authorization}){          
+        return (
+            <StyledViewItem>
+                <Text><StyledTextTitle>Cód. Autorização: </StyledTextTitle>{authorization.id}</Text>
+                <Text><StyledTextTitle>Hospital: </StyledTextTitle>{authorization.hospital}</Text>
+                <Text><StyledTextTitle>Beneficiario: </StyledTextTitle>{authorization.beneficiario}</Text>
+                <StyledButtonList>
+                    <Button 
+                        type="clear"
+                        icon={<Icon name="eye" size={22} type='font-awesome' />}
+                        onPress={() => {navigation.navigate("NewEvolution")}}
+                        />
+                    <Button 
+                        type="clear"
+                        icon={<Icon name="pencil" size={22} type='font-awesome' />}
+                        onPress={() => {navigation.navigate("AuthorizationForm")}}
+                        />
+                </StyledButtonList>
+            </StyledViewItem>
+        )      
+    }
+
+    return (
+        <StyledView>
+            <FlatList 
+                keyExtractor={authorization => authorization.id.toString()}
+                data={authorizations}
+                renderItem={getAuthorizationsItem}
+            />
+        </StyledView>
+    );}
 
     const StyledViewItem = styled.View`
         background-color: #F2F2F2;
@@ -29,37 +81,3 @@ export default props => {
         flex-direction: row;
         align-self: flex-end;
     `
-
-    function getAuthorizationsItem({item: authorization}){
-        return (
-            <StyledViewItem>
-                <Text><StyledTextTitle>Cód. Autorização: </StyledTextTitle>{authorization.id}</Text>
-                <Text><StyledTextTitle>Hospital: </StyledTextTitle>{authorization.hospital}</Text>
-                <Text><StyledTextTitle>Beneficiario: </StyledTextTitle>{authorization.beneficiario}</Text>
-                <StyledButtonList>
-                    <Button 
-                        type="clear"
-                        icon={<Icon name="eye" size={22} type='font-awesome' />}
-                        onPress={() => {}}
-                        />
-                    <Button 
-                        type="clear"
-                        icon={<Icon name="pencil" size={22} type='font-awesome' />}
-                        onPress={() => {}}
-                        />
-                </StyledButtonList>
-            </StyledViewItem>
-
-        )
-    }
-
-    return (
-        <StyledView>
-            <FlatList 
-                keyExtractor={authorization => authorization.id.toString()}
-                data={authorizations}
-                renderItem={getAuthorizationsItem}
-            />
-        </StyledView>
-    )
-}

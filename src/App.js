@@ -4,7 +4,11 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import AuthorizationList from './views/AuthorizationList'
 import AuthorizationForm from './views/AuthorizationForms'
+import NewEvolution from './views/NewEvolution'
+
 import { Button, Icon } from 'react-native-elements';
+
+
 
 const Stack = createStackNavigator();
 
@@ -40,6 +44,13 @@ export default props => {
               component={AuthorizationForm}
               options={{
                 title: "Cadastro"
+              }}
+            />
+            <Stack.Screen 
+              name="NewEvolution"
+              component={NewEvolution}
+              options={{
+                title: "Cadastrar Evolução"
               }}
             />
           </Stack.Navigator>
