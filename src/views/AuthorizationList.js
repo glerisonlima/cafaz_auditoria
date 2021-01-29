@@ -20,7 +20,7 @@ export default ({navigation, route}) => {
         async function loadAuthorizations(){
             const realm = await getRealm();
 
-            const data = realm.objects('authorization').sorted('id', true);
+            const data = realm.objects('autorizations').sorted('id', true);
             setAuthorizations(data);
         }
         loadAuthorizations();
@@ -36,12 +36,20 @@ export default ({navigation, route}) => {
                     <Button 
                         type="clear"
                         icon={<Icon name="eye" size={22} type='font-awesome' />}
-                        onPress={() => {navigation.navigate("NewEvolution")}}
+                        onPress={() => {navigation.navigate("NewEvolution", {
+                            id: authorization.id,
+                            hospital: authorization.hospital,
+                            beneficiario: authorization.beneficiario,
+                        })}}
                         />
                     <Button 
                         type="clear"
                         icon={<Icon name="pencil" size={22} type='font-awesome' />}
-                        onPress={() => {navigation.navigate("AuthorizationForm")}}
+                        onPress={() => {navigation.navigate("AuthorizationForm", {
+                            data: {id: authorization.id,
+                            hospital: authorization.hospital,
+                            beneficiario: authorization.beneficiario }
+                        })}}
                         />
                 </StyledButtonList>
             </StyledViewItem>

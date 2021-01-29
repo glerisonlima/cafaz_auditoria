@@ -26,7 +26,7 @@ export default props => {
                     <Button 
                       type="clear"
                       icon={<Icon name="add" size={25} />}
-                      onPress={() => navigation.navigate("AuthorizationForm")}
+                      onPress={() => navigation.navigate("AuthorizationForm", {data: null})}
                     />
                   ),
                   headerRight: () => (

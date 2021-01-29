@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { KeyboardAvoidingView, ScrollView } from 'react-native';
 import styled from 'styled-components/native';
 
@@ -7,20 +7,32 @@ import getRealm from '../services/realm'
 
 export default ({route, navigation}) => {
 
+    const { data } = route.params;  
+
     const [codAutorizacao, setcodAutorizacao] = useState('');
     const [hospital, setHospital] = useState('');
     const [beneficiario, setBeneficiario] = useState('');
+
+    useEffect(() => {
+        if(data){
+            setcodAutorizacao(data.id.toString()),
+            setHospital(data.hospital),
+            setBeneficiario(data.beneficiario)
+        }
+        //console.log(data)
+    }, [])
 
     async function handleAddAutorization(){
         try {
             const data = {
                 id: parseInt(codAutorizacao),
                 hospital: hospital,
-                beneficiario: beneficiario
+                beneficiario: beneficiario,
+                //evolutions: []
             }
             const realm = await getRealm();
             realm.write(() => {
-                realm.create('authorization', data)
+                realm.create('autorizations', data, 'modified')
             })
             navigation.navigate("AuthorizationList")
         } catch (err) {
