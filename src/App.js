@@ -7,6 +7,7 @@ import AuthorizationForm from './views/AuthorizationForms'
 import NewEvolution from './views/NewEvolution'
 
 import { Button, Icon } from 'react-native-elements';
+import Home from './views/Home';
 
 
 
@@ -15,7 +16,7 @@ const Stack = createStackNavigator();
 export default props => {
     return (
         <NavigationContainer>
-          <Stack.Navigator initialRouteName="AuthorizationList">
+          <Stack.Navigator initialRouteName="Home">
             <Stack.Screen 
               name="AuthorizationList"
               component={AuthorizationList}
@@ -51,6 +52,13 @@ export default props => {
               component={NewEvolution}
               options={{
                 title: "Cadastrar Evolução"
+              }}
+            />
+            <Stack.Screen 
+              name="Home"
+              component={Home}
+              options={{
+                headerShown: false
               }}
             />
           </Stack.Navigator>

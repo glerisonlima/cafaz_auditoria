@@ -4,27 +4,61 @@ import { Text, FlatList } from 'react-native';
 import { Button, Icon } from 'react-native-elements';
 import styled from 'styled-components/native';
 
-import { Alert } from 'react-native';
 
 import getRealm from '../services/realm'
 
 export default ({navigation, route}) => {  
     
-    const [authorizations, setAuthorizations] = useState([])
-
+    const [authorizations, setAuthorizations] = useState([]);
+    const [pesquisa, setPesquisa] = useState('');
     
 
    
 
     useEffect(() => {
-        async function loadAuthorizations(){
-            const realm = await getRealm();
-
-            const data = realm.objects('autorizations').sorted('id', true);
-            setAuthorizations(data);
-        }
+        
         loadAuthorizations();
-    }, [authorizations])
+    }, [])
+
+    async function loadAuthorizations(){
+        const realm = await getRealm();
+
+        const data = realm.objects('autorizations').sorted('id', true);
+        setAuthorizations(data);
+    }
+
+    function handlerPesquisa(texto) {
+        setPesquisa(texto);
+        if(texto){
+            if(!isNaN(texto)){
+                async function filterAutorizations(){
+                    const realm = await getRealm();
+                    const data = realm.objects('autorizations').filtered(`id = "${texto}"`);
+                    if(data.length > 0){
+                        setAuthorizations(data);
+                    }else{
+                        loadAuthorizations();
+                    }
+                }
+                filterAutorizations();
+            }else{
+                console.log('é texto')
+                async function filterAutorizations(){
+                    const realm = await getRealm();
+                    const data = realm.objects('autorizations').filtered(`hospital LIKE '*${texto}*' or beneficiario LIKE '*${texto}*'` );                    
+                    if(data.length > 0){
+                        setAuthorizations(data);
+                    }else{
+                        loadAuthorizations();
+                    }
+                }
+                filterAutorizations();
+            }
+        }else{
+            loadAuthorizations();
+        }
+        
+    }    
 
     function getAuthorizationsItem({item: authorization}){          
         return (
@@ -58,10 +92,13 @@ export default ({navigation, route}) => {
 
     return (
         <StyledView>
+            <InputPesquisa placeholder="Pesquisar autorização" value={pesquisa} onChangeText={(t) => {handlerPesquisa(t)}}/>
             <FlatList 
                 keyExtractor={authorization => authorization.id.toString()}
                 data={authorizations}
                 renderItem={getAuthorizationsItem}
+                enableEmptySections={true}
+                extraData={authorizations}
             />
         </StyledView>
     );}
@@ -88,4 +125,16 @@ export default ({navigation, route}) => {
         display: flex;
         flex-direction: row;
         align-self: flex-end;
+    `
+
+    const InputPesquisa = styled.TextInput`
+        background-color: #F2F2F2;
+        height: 60px;
+        margin-left: 10px;
+        margin-right: 10px;
+        margin-top: 15px;
+        margin-bottom: 15px;
+        border-radius: 4px;
+        font-size: 18px;
+        padding-left: 8px;
     `
